@@ -1,9 +1,11 @@
 package com.alternative.controllers;
 
 import com.alternative.dto.request.CategoryDTO;
+import com.alternative.dto.request.OrderDTO;
 import com.alternative.dto.request.ProductDTO;
 import com.alternative.dto.request.UserDTO;
 import com.alternative.services.FileStorageService;
+import com.alternative.services.OrderService;
 import com.alternative.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -27,6 +29,9 @@ public class ProducerController {
     @Autowired
     private FileStorageService fileStorageService;
 
+    
+	@Autowired
+    private  OrderService orderService;
     // Récupérer tous les produits
     @GetMapping("/producer/{producerId}/products")
     public ResponseEntity<List<ProductDTO>> getProductsByProducer(@PathVariable Long producerId) {
@@ -137,5 +142,13 @@ public class ProducerController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+ 
+    
+    
+    @GetMapping("/producer/{producerId}")
+    public ResponseEntity<List<OrderDTO>> getOrdersByProducer(@PathVariable Long producerId) {
+        List<OrderDTO> orders = orderService.getOrdersByProducer(producerId);
+        return ResponseEntity.ok(orders);
     }
 }

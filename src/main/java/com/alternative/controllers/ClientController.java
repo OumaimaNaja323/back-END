@@ -36,7 +36,7 @@ public class ClientController {
     private  CategoryService categoryService;
     
  
-    
+      
     @GetMapping("/products")
     public ResponseEntity<List<ProductDTO>> getAllProducts() {
         return ResponseEntity.ok(productService.getAllProducts());
@@ -52,15 +52,21 @@ public class ClientController {
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
     
+
+
+    // Créer une nouvelle commande
     @PostMapping("/orders")
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO, 
-                                              @RequestAttribute Long clientId) {
-        return ResponseEntity.ok(orderService.createOrder(orderDTO, clientId));
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
+        System.out.println("Received Order: " + orderDTO); // log pour vérifier
+        OrderDTO createdOrder = orderService.createOrder(orderDTO);
+        return new ResponseEntity<>(createdOrder, HttpStatus.CREATED);
     }
-    
-    @GetMapping("/orders")
-    public ResponseEntity<List<OrderDTO>> getMyOrders(@RequestAttribute Long clientId) {
-        return ResponseEntity.ok(orderService.getClientOrders(clientId));
+
+    @GetMapping("/client/{clientId}")
+    public ResponseEntity<List<OrderDTO>> getOrdersByClient(@PathVariable Long clientId) {
+        List<OrderDTO> orders = orderService.getOrdersByClient(clientId);
+        return ResponseEntity.ok(orders);
     }
+
 }
 
